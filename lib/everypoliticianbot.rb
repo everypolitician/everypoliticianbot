@@ -3,12 +3,22 @@ require 'git'
 require 'octokit'
 
 module Everypoliticianbot
+  def self.github
+    @github ||= Octokit::Client.new(
+      access_token: github_access_token
+    )
+  end
+
+  def self.github_access_token
+    @github_access_token ||= ENV.fetch('GITHUB_ACCESS_TOKEN')
+  rescue KeyError => e
+    abort "Please set GITHUB_ACCESS_TOKEN in the environment before running"
+  end
+
   # Mixin to provide a GitHub client and helpers.
   module Github
     def github
-      @github ||= Octokit::Client.new(
-        access_token: github_access_token
-      )
+      Everypoliticianbot.github
     end
 
     def with_git_repo(repo_name, options)
@@ -27,12 +37,6 @@ module Everypoliticianbot
     end
 
     private
-
-    def github_access_token
-      @github_access_token ||= ENV.fetch('GITHUB_ACCESS_TOKEN')
-    rescue KeyError => e
-      abort "Please set GITHUB_ACCESS_TOKEN in the environment before running"
-    end
 
     def clone(url)
       @git ||= Git.clone(url, '.').tap do |g|
