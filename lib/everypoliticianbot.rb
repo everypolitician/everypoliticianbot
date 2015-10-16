@@ -36,7 +36,7 @@ module Everypoliticianbot
         return unless git.status.changed.any? || git.status.untracked.any?
         git.add
         git.commit(message)
-        git.push
+        git.push('origin', branch)
       end
     end
 
