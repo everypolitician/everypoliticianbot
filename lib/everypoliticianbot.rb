@@ -11,8 +11,8 @@ module Everypoliticianbot
 
   def self.github_access_token
     @github_access_token ||= ENV.fetch('GITHUB_ACCESS_TOKEN')
-  rescue KeyError => e
-    abort "Please set GITHUB_ACCESS_TOKEN in the environment before running"
+  rescue KeyError
+    abort 'Please set GITHUB_ACCESS_TOKEN in the environment before running'
   end
 
   # Mixin to provide a GitHub client and helpers.
