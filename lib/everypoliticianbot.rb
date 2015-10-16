@@ -27,7 +27,11 @@ module Everypoliticianbot
       message = options.fetch(:message)
       with_tmp_dir do
         git = clone(clone_url(repo.clone_url))
-        git.branch(branch).checkout
+        if git.branches["origin/#{branch}"]
+          git.checkout(branch)
+        else
+          git.checkout(branch, new_branch: true)
+        end
         yield
         return unless git.status.changed.any? || git.status.untracked.any?
         git.add
