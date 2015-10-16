@@ -33,8 +33,8 @@ module Everypoliticianbot
           git.checkout(branch, new_branch: true)
         end
         yield
-        return unless git.status.changed.any? || git.status.untracked.any?
         git.add
+        return unless git.status.changed.any? || git.status.added.any?
         git.commit(message)
         git.push('origin', branch)
       end
