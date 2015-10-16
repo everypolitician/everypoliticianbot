@@ -1,28 +1,43 @@
 # Everypoliticianbot
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/everypoliticianbot`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Contains shared ruby code that's used in various places in the [EveryPolitician project](http://everypolitician.org).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'everypoliticianbot'
+gem 'everypoliticianbot', github: 'everypolitician/everypoliticianbot'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install everypoliticianbot
-
 ## Usage
 
-TODO: Write usage instructions here
+To use the GitHub client first set the `GITHUB_ACCESS_TOKEN` environment variable, then you can access an [Octokit](http://octokit.github.io/octokit.rb/) instance:
+
+```ruby
+Everypoliticianbot.github
+```
+
+To manipulate a git repository:
+
+```ruby
+class MyClass
+  include Everypoliticianbot::Github
+
+  def perform
+    options = { branch: 'new-things', message: 'Added new things' }
+    with_git_repo('everypolitician/viewer-sinatra', options) do
+      File.write('new.txt', "This is a new file\n"
+    end
+  end
+end
+```
+
+The above code will clone the [everypolitician/viewer-sinatra](https://github.com/everypolitician/viewer-sinatra) repository, checkout the given branch, in this case `new-things`, then it will run the block with the current working directory set to the repository. When the block has finished it will then commit the changes, if there are any, using the provided message and push the result back to GitHub.
 
 ## Development
 
@@ -32,7 +47,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/everypoliticianbot.
+Bug reports and pull requests are welcome on GitHub at https://github.com/everypolitician/everypoliticianbot.
 
 
 ## License
