@@ -1,6 +1,7 @@
 require 'everypoliticianbot/version'
 require 'git'
 require 'octokit'
+require 'tmpdir'
 
 module Everypoliticianbot
   def self.github
