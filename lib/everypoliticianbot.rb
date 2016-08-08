@@ -27,7 +27,7 @@ module Everypoliticianbot
       branch = options.fetch(:branch, 'master')
       message = options.fetch(:message)
       with_tmp_dir do
-        git = clone(clone_url(repo.clone_url))
+        git = clone(clone_url(repo.clone_url), depth: options[:clone_depth])
         if git.branches["origin/#{branch}"]
           git.checkout(branch)
         else
@@ -43,8 +43,8 @@ module Everypoliticianbot
 
     private
 
-    def clone(url)
-      @git ||= Git.clone(url, '.').tap do |g|
+    def clone(url, options = {})
+      @git ||= Git.clone(url, '.', options).tap do |g|
         g.config('user.name', github.login)
         g.config('user.email', github.emails.first[:email])
       end
