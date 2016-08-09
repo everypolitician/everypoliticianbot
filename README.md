@@ -1,3 +1,5 @@
+**:warning: Deprecated: Please use [with_git_repo](https://github.com/everypolitician/with_git_repo) instead**
+
 # Everypoliticianbot
 
 Contains shared ruby code that's used in various places in the [EveryPolitician project](http://everypolitician.org).
