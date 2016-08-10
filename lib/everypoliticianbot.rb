@@ -18,8 +18,6 @@ module Everypoliticianbot
 
   # Mixin to provide a GitHub client and helpers.
   module Github
-    TMP_DIR = Dir.mktmpdir
-
     def github
       Everypoliticianbot.github
     end
@@ -29,13 +27,13 @@ module Everypoliticianbot
       branch = options.fetch(:branch, 'master')
       message = options.fetch(:message)
       with_tmp_dir do
-        git = git_repo(clone_url(repo.clone_url), repo.name)
+        git = clone(clone_url(repo.clone_url))
         if git.branches["origin/#{branch}"]
           git.checkout(branch)
         else
           git.checkout(branch, new_branch: true)
         end
-        git.chdir { yield }
+        yield
         git.add
         return unless git.status.changed.any? || git.status.added.any?
         git.commit(message)
@@ -45,13 +43,8 @@ module Everypoliticianbot
 
     private
 
-    def git_repo(url, destination)
-      return Git.open(destination) if File.directory?(destination)
-      clone(url, destination)
-    end
-
-    def clone(url, destination)
-      Git.clone(url, destination).tap do |g|
+    def clone(url)
+      @git ||= Git.clone(url, '.').tap do |g|
         g.config('user.name', github.login)
         g.config('user.email', github.emails.first[:email])
       end
@@ -65,7 +58,7 @@ module Everypoliticianbot
     end
 
     def with_tmp_dir(&block)
-      Dir.chdir(TMP_DIR, &block)
+      Dir.mktmpdir { |tmp_dir| Dir.chdir(tmp_dir, &block) }
     end
   end
 end
