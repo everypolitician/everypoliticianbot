@@ -41,6 +41,14 @@ end
 
 The above code will clone the [everypolitician/viewer-sinatra](https://github.com/everypolitician/viewer-sinatra) repository, checkout the given branch, in this case `new-things`, then it will run the block with the current working directory set to the repository. When the block has finished it will then commit the changes, if there are any, using the provided message and push the result back to GitHub.
 
+### Options
+
+You can pass the following options in a `Hash` as the last argument to `with_git_repo`:
+
+- `:message` (required) - The message that should be used for the commit resulting from the changes in the `with_git_repo` block.
+- `:branch` (optional) - The branch to make the changes on. This branch will be created if it doesn't already exist.
+- `:clone_depth` (optional) - An Integer representing the number of commits to clone.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
